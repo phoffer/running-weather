@@ -4,9 +4,9 @@ class MyApp < Sinatra::Base
     @css = []
   end
   before do
-    id = cookies[:id] || session[:id] || 0
+    id = cookies[:id] || session[:id]
     # puts id
-    if @user = User.find(id)
+    if id && @user = User.find(id)
       @runs = @user.runs
     else
       # @user = nil
