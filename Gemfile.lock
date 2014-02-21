@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/phoffer/garmin_connect.git
-  revision: 564fe54e9cc443c4f72de7c60b9b7431b8f082c1
+  revision: 2ee7df0150201dbde0748b86c34d4106395a7341
   specs:
     garmin_connect (0.0.1)
 
