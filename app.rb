@@ -1,12 +1,14 @@
 # encoding: utf-8
 require 'sinatra/base'
 require 'sinatra/namespace'
+require "sinatra/cookies"
 require 'haml'
 require 'json'
 
 class MyApp < Sinatra::Base
 	register Sinatra::Namespace
-	enable :sessions
+  helpers Sinatra::Cookies
+  enable :sessions
   set :session_secret, 'super secret'
   # disable :logging
   set :haml, format: :html5
@@ -22,6 +24,7 @@ class MyApp < Sinatra::Base
   end
 
   configure :development do
+    set :cookie_options, :domain => nil
 		# set :public_folder,
 	end
 

@@ -1,0 +1,15 @@
+%table.runs
+  - @run.attributes.each do |att,val|
+    %tr
+      %td= att
+      %td= val
+  - unless @run.condition.pws.empty?
+    - @run.condition.attributes.each do |att,val|
+      %tr
+        %td= att
+        %td= val
+
+
+%a{href: '/' } home
+
+%a{href: '/logout' } logout

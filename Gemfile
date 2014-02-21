@@ -14,4 +14,5 @@ gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'haml'
 gem 'mongoid'
-
+gem 'garmin_connect', :github => 'phoffer/garmin_connect'
+gem 'haversine'

@@ -1,9 +1,11 @@
 # stuff I tend to use
 misc/
 config/.env
+models/dev_init.rb
 */old/*
 _start_thin.rb
 *sublime-*
+=testing.rb
 
 #################
 ## Eclipse

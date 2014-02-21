@@ -2,14 +2,6 @@
 production:
   sessions:
     default:
-      hosts:
-        # - mongolab.com:31777
-      # Define the default database name.
-      # database: db_name
-      # Since this database points at a session connected to MongoHQ, we must
-      # provide the authentication details.
-      # username: username
-      # password: password
       uri: <%= ENV['MONGOLAB_URI'] %>
 development:
   sessions:

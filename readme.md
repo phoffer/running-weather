@@ -1,5 +1,3 @@
 # README
 
-base layout for Sinatra app.
-usually missing a few items.
-default to mongoid
+designed to automatically grab the weather for me after runs. then I don't have to be at a specific machine to do it myself

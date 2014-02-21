@@ -1,0 +1,5 @@
+%form{method: :post, action: '/login'}
+  %input{ type: :text, name: :username, placeholder: 'username' }
+  %select{ name: :service }
+    %option{value: 'garmin' } Garmin Connect
+  %input{type: :submit, name: :submit, value: :login }
