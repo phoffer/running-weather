@@ -6,6 +6,7 @@ models/dev_init.rb
 _start_thin.rb
 *sublime-*
 =testing.rb
+.bundle
 
 #################
 ## Eclipse
