@@ -121,9 +121,9 @@ class Run
     self.create_condition self.target.conditions(wunderground: self.user.wunderground, stats: [:temp, :hum] + self.user.custom)
   end
   def method_missing(method, *args)
-    if self.target.respond_to? method
+    # if self.target.respond_to? method
       self.target.send(method, *args)
-    end
+    # end
   end
 end
 class Condition
