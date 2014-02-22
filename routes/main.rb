@@ -52,6 +52,14 @@ class MyApp < Sinatra::Base
       end
     end
   end
+  get '/runkeeper' do
+    if params[:code]
+      # return from RK
+    else
+      # need to go to RK
+    end
+    haml :runkeeper
+  end
   post '/signup' do
     # allow sign up on main page? would make more sense
     # user sign up. only need garmin username

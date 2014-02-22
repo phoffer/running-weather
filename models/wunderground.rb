@@ -56,11 +56,11 @@ class Wunderground
     end
     def get_readings(time, wunderground = self.class.new)
       url = "history_#{time.strftime('%Y%m%d')}/q/pws:#{self.id}.json"
-      begin
+      # begin
         @readings = wunderground.request(url)['history']["observations"].map { |hash| Reading.new(hash) }
-      rescue
-        puts wunderground.request(url).keys.inspect
-      end
+      # rescue
+      #   puts wunderground.request(url).keys.inspect
+      # end
     end
 
     class << self
