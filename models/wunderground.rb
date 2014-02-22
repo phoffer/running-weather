@@ -56,11 +56,11 @@ class Wunderground
     end
     def get_readings(time, wunderground = self.class.new)
       url = "history_#{time.strftime('%Y%m%d')}/q/pws:#{self.id}.json"
-      # begin
+      begin
         @readings = wunderground.request(url)['history']["observations"].map { |hash| Reading.new(hash) }
-      # rescue
-      #   puts wunderground.request(url).keys.inspect
-      # end
+      rescue
+        puts wunderground.request(url).keys.inspect
+      end
     end
 
     class << self
@@ -98,6 +98,8 @@ class Wunderground
     end
     def time
       Time.strptime(@data['date']['pretty'], '%I:%M %p %Z on %B %e, %Y')
+      # t = @data['utcdata']
+      # Time.gm(t['year'], t['mon'], t['mday'], t['hour'], t['min'])
     end
     def method_missing(method, *args)
       @data[method.to_s]
