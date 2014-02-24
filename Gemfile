@@ -6,7 +6,8 @@ platforms :ruby do    # linux
   gem 'newrelic_rpm'
 end
 # gem 'unicorn'
-platforms :mswin do   # gems specific to windows
+
+group :development do
   gem 'thin'
 end
 

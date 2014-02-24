@@ -1,7 +1,4 @@
 class GarminConnect::Activity
-  def local_date
-    Time.strptime(self.activitySummary.BeginTimestamp.display.split(', ').last, '%e %b %Y')
-  end
   def conditions(wunderground: nil, stats: [:temp, :hum])
     local_pws = wunderground.nearby_pws(self.latlong)
     metrics = self.metrics
@@ -15,7 +12,7 @@ class GarminConnect::Activity
     # puts info.length
     # puts metrics.length
     pws_list = info.uniq
-    readings = Hash[pws_list.map{ |pws| [pws.id, pws.get_readings(self.local_date, wunderground)] }]
+    readings = Hash[pws_list.map{ |pws| [pws.id, pws.get_readings(self.time, wunderground)] }]
     current_reading = readings[info.first.id].shift
     c_d = Hash.new { |hash, key| hash[key] = [] }
     # puts readings.first.last.first.inspect
