@@ -1,0 +1,18 @@
+%td
+  %a{href: "/run/#{@r.run_id}"}= @r.run_id
+%td= @r.timestamp.split(', ').first
+%td= @r.timestamp.split(', ').last
+%td= @r.distance
+%td= @r.pace
+%td= @r.avg_hr
+%td= @r.duration
+- if @r.condition.pws.empty?
+  %td{colspan: 4 + @user.custom.length}
+    %a.get{href: "/weather/#{@r.run_id}"} Get weather data
+- else
+  %td= @r.condition.temp
+  %td= @r.condition.temp_min
+  %td= @r.condition.temp_max
+  %td= @r.condition.hum
+  - @r.condition.custom.each do |k,v|
+    %td= v

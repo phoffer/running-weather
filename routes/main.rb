@@ -30,27 +30,26 @@ class MyApp < Sinatra::Base
     # list all the runs
     haml :main
   end
-  namespace '/run/:run_id' do
-    before do
-      @run = @user.run(params[:run_id])
-      # @run = @user.run(params[:run])
-    end
-    get do
-      # nothing
-    end
-    get '/weather' do
-      @weather = @run.conditions
-      # @weather = @run.conditions
-    end
-    after do
-      if request.xhr?
-        content_type 'application/json'
-        @data = {user: @user, run: @run, weather: @weather}
-        body @data.to_json if @data
-      else
-        body haml :run
-      end
-    end
+  post '/run' do
+    content_type 'application/plain'
+    @r = @user.run(params[:run_id])
+    haml :run_tr, layout: false
+  end
+  post '/weather' do
+    content_type 'application/plain'
+    @r = @user.run(params[:run_id])
+    @weather = @r.conditions
+    haml :run_tr, layout: false
+  end
+
+  get '/run/:run_id' do
+    @run = @user.run(params[:run_id])
+    body haml :run
+  end
+  get '/weather/:run_id' do
+    @run = @user.run(params[:run_id])
+    @weather = @run.conditions
+    body haml :run
   end
   get '/runkeeper' do
     if params[:code]

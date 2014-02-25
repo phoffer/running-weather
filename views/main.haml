@@ -4,7 +4,7 @@
 %table.runs
   %thead
     %td Run ID
-    %td
+    %td Day
     %td Time
     %td distance
     %td pace_secs
@@ -18,30 +18,14 @@
       %td= c
   %tbody
     - act_ids.each do |run_id|
-      %tr
-        %td
-          %a{href: "/run/#{run_id}"}= run_id
-        - if r = user_runs[run_id.to_s]
-          %td= r.timestamp.split(', ').first
-          %td= r.timestamp.split(', ').last
-          %td= r.distance
-          %td= r.pace
-          %td= r.avg_hr
-          %td= r.duration
-          - if r.condition.pws.empty?
-            %td{colspan: 4 + @user.custom.length}
-              %a.get_weather{href: "/run/#{r.run_id}/weather"} Get weather data
-          - else
-            %td= r.condition.temp
-            %td= r.condition.temp_min
-            %td= r.condition.temp_max
-            %td= r.condition.hum
-            - r.condition.custom.each do |k,v|
-              %td= v
+      %tr.run{id: run_id}
+        - if @r = user_runs[run_id.to_s]
+          = haml :run_tr
         - else
           %td
+            %a{href: "/run/#{run_id}"}= run_id
           %td
-            %a.get_run{href: "/run/#{run_id}" } Get run data
+            %a.get{href: "/run/#{run_id}" } Get run data
 %br
 %br
 %br

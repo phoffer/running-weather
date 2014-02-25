@@ -12,7 +12,7 @@ class MyApp < Sinatra::Base
   set :session_secret, 'super secret'
   # disable :logging
   set :haml, format: :html5
-  set :javascripts, []
+  set :javascripts, ['jquery-2.1.0.min', 'main']
   set :stylesheets, []
 
   configure :production do
