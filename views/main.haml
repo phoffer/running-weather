@@ -1,4 +1,4 @@
-- act_ids = @user.activity_ids(@run_count || 20, 1)
+- act_ids = @act_ids || @user.activity_ids(@run_count || 20, 1)
 - user_runs = Hash[@user.runs.map{ |r| [r.run_id, r] }]
 / %a{href: '/retrieve' } Retrieve last run
 %table.runs

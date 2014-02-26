@@ -16,6 +16,8 @@ class MyApp < Sinatra::Base
   get '/' do
     @title = 'Running Weather'
     if @user
+      @act_ids = @user.activity_ids(@run_count || 20, 1)
+      @act_ids.first(@user.wunderground.limit).take_while{ |run_id| !(@user.runs.find_by(run_id: run_id)) }.each{ |run_id| @user.run(run_id).conditions }
       js 'ZeroClipboard.min'
       haml :main
     else
@@ -79,10 +81,10 @@ class MyApp < Sinatra::Base
   end
   post '/signup' do
     @user = User.find_or_create_by(email: params[:email])
-    puts @user.inspect
+    # puts @user.inspect
     cookies[:id] = nil
     session[:id] = @user._id
-    puts session[:id]
+    # puts session[:id]
     redirect '/welcome'
   end
   post '/login' do

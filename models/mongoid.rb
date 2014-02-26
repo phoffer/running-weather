@@ -1,13 +1,14 @@
 class Account # subclassed by account for each supported service
   include Mongoid::Document
   include Mongoid::Timestamps::Created
-  belongs_to :user
+  belongs_to :user_mongoid, class_name: 'User'
   has_many :runs
+
 end
 class User
   include Mongoid::Document
-  include Mongoid::Timestamps::Created
-  has_many :accounts
+  include Mongoid::Timestamps
+  has_many :accounts, inverse_of: :user_mongoid
   has_many :runs
   has_one :wunder, class_name: 'Wunderground'
 
@@ -24,13 +25,20 @@ class User
   # field :current,     type: Account
 
   def add_account(params)
+    puts 'adding account'
     type = case params.delete('service')
     when 'garmin'
       Garmin
     when 'runkeeper'
       # runkeeper account class
     end
+    # puts 'before_create'
+    # a = type.create(params)
+    # puts 'after_create'
+    # puts a.inspect
     self.accounts << type.create(params)
+    self.save
+    self.run.conditions
   end
   def current
     # puts 'current'
@@ -136,6 +144,9 @@ class Run
   after_create  do |run|
     run.retrieve_data
   end
+  after_save do |run|
+    run.user.touch
+  end
   def copy_service
     # puts self.user.current.inspect
     self.account = self.user.current
@@ -148,7 +159,8 @@ class Run
   end
 
   def duration
-    Time.at(self.dur_secs).strftime("%M:%S")
+    format = self.dur_secs >= 3600 ? "%H:%M:%S" : "%M:%S"
+    Time.at(self.dur_secs).strftime(format)
   end
   def pace
     Time.at(self.pace_secs).strftime("%M:%S")

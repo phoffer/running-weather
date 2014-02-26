@@ -1,4 +1,5 @@
-
+%a{href: '/' } Main page
+%br
 %a{href: 'http://www.wunderground.com/weather/api/' } Wunderground API link
 - k,l = @user.wunder ? [@user.wunder.key, @user.wunder.limit] : [nil, nil]
 %form{method: :post, action: '/wunderground'}
@@ -13,3 +14,6 @@
     %input{ type: :text,   name: :name }
     %button{ type: :submit} Add Garmin Account
 
+
+- @content = @user
+=haml :_inspect

@@ -1,3 +1,10 @@
 %pre
   %code
-    = @content.inspect.gsub('<', '&lt;').gsub('>', '&gt;')
+    - if @content.respond_to? :attributes
+      %table
+        - @content.attributes.each do |att, val|
+          %tr
+            %td= att
+            %td= val
+    - else
+      = @content.inspect.gsub('<', '&lt;').gsub('>', '&gt;')
