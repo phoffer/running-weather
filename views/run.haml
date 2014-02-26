@@ -1,10 +1,10 @@
 %table.runs
-  - @run.attributes.each do |att,val|
+  - @r.attributes.each do |att,val|
     %tr
       %td= att
       %td= val
-  - unless @run.condition.pws.empty?
-    - @run.condition.attributes.each do |att,val|
+  - unless @r.condition.pws.empty?
+    - @r.condition.attributes.each do |att,val|
       %tr
         %td= att
         %td= val

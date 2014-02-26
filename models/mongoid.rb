@@ -1,24 +1,43 @@
+class Account # subclassed by account for each supported service
+  include Mongoid::Document
+  include Mongoid::Timestamps::Created
+  belongs_to :user
+  has_many :runs
+end
 class User
   include Mongoid::Document
   include Mongoid::Timestamps::Created
+  has_many :accounts
   has_many :runs
   has_one :wunder, class_name: 'Wunderground'
 
-  field :name,          type: String,                   as: :username   # garmin username
-  field :service,       type: String,   default: 'garmin'
+  field :email,         type: String
   field :zip,           type: Integer,  default: nil
   field :pws,           type: String,   default: nil
   field :pws_bad,       type: Array,    default: [],    as: :pws_blacklist
   field :unit,          type: String,   default: 'mi'
   field :custom,        type: Array,    default: []
 
-  def target
-    case self.service
+  # separate into user object and account object, 1-n. then grabbing data is based on account
+  # account contains all information required for account handling
+  # all interaction with source service
+  # field :current,     type: Account
+
+  def add_account(params)
+    type = case params.delete('service')
     when 'garmin'
-      GarminConnect::User.new(self.name)
+      Garmin
     when 'runkeeper'
-      # something for runkeeper
+      # runkeeper account class
     end
+    self.accounts << type.create(params)
+  end
+  def current
+    # puts 'current'
+    self.accounts.desc(:created_at).first
+  end
+  def target
+    self.current.user
   end
 
   def import(limit = 100, start = 1)
@@ -39,6 +58,7 @@ class User
   # end
   def run(run_id = self.most_recent.id)
     run_id ||= self.most_recent.id
+    # puts run_id
     self.runs.find_or_create_by(run_id: run_id)
     # self.runs.create(run_id: run_id)
   end
@@ -49,6 +69,33 @@ class User
     end
   end
 end
+
+class Runkeeper < Account
+
+  field :auth_key_or_something, type: String
+
+end
+
+class Garmin < Account
+  include Mongoid::Document
+  include Mongoid::Timestamps::Created
+
+  field :name,  type: String, as: :username   # garmin username
+
+  def user
+    GarminConnect::User.new(self.name)
+  end
+  def service
+    'garmin'
+  end
+  def activity(run_id)
+    GarminConnect::Activity.new(run_id)
+  end
+  alias :run :activity
+
+
+end
+
 class Wunderground
   include Mongoid::Document
   belongs_to :user
@@ -73,10 +120,10 @@ class Run
   include Mongoid::Document
   include Mongoid::Timestamps::Created
   belongs_to :user
+  belongs_to :account
   embeds_one :condition, autobuild: true
 
   field :run_id,        type: String,     as: :activity_id
-  field :service,       type: String,     default: 'something'
   field :time,          type: Time
   field :timestamp,     type: String
   field :distance,      type: Float
@@ -87,13 +134,17 @@ class Run
 
   before_create :copy_service
   after_create  do |run|
-    self.retrieve_data
+    run.retrieve_data
   end
   def copy_service
-    self.service = self.user.service
+    # puts self.user.current.inspect
+    self.account = self.user.current
   end
   def retrieve_data
     self.update_attributes(self.summary)
+  end
+  def service
+    self.account.class
   end
 
   def duration
@@ -103,12 +154,7 @@ class Run
     Time.at(self.pace_secs).strftime("%M:%S")
   end
   def target
-    case self.service
-    when 'garmin'
-      GarminConnect::Activity.new(self.run_id)
-    when 'runkeeper'
-      # something for runkeeper
-    end
+    self.account.run(self.run_id)
   end
   def conditions_hash
     self.target.conditions(wunderground: self.user.wunderground, stats: [:temp, :hum] + self.user.custom)

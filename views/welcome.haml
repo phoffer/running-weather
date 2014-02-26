@@ -1,0 +1,15 @@
+
+%a{href: 'http://www.wunderground.com/weather/api/' } Wunderground API link
+- k,l = @user.wunder ? [@user.wunder.key, @user.wunder.limit] : [nil, nil]
+%form{method: :post, action: '/wunderground'}
+  %input{ type: :text, name: :key, placeholder: 'API key', value: k }
+  %input{ type: :text, name: :limit, placeholder: 'API limit (per minute)', value: l }
+  %button{ type: :submit }= @user.wunder ? 'Update API Key' : 'Add API key'
+
+
+.garmin
+  %form{method: :post, action: '/account'}
+    %input{ type: :hidden, name: :service,  value: 'garmin' }
+    %input{ type: :text,   name: :name }
+    %button{ type: :submit} Add Garmin Account
+

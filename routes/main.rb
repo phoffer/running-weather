@@ -4,7 +4,7 @@ class MyApp < Sinatra::Base
     @css = []
   end
   before do
-    id = cookies[:id] || session[:id]
+    id = session[:id] || cookies[:id]
     # puts id
     if id && @user = User.find(id)
       @runs = @user.runs
@@ -16,6 +16,7 @@ class MyApp < Sinatra::Base
   get '/' do
     @title = 'Running Weather'
     if @user
+      js 'ZeroClipboard.min'
       haml :main
     else
       @var = 'nothing'
@@ -23,7 +24,7 @@ class MyApp < Sinatra::Base
     end
   end
   get '/retrieve' do
-    @run = @user.run(params[:run])
+    @r = @user.run(params[:run])
     haml :run
   end
   get '/runs' do
@@ -43,13 +44,13 @@ class MyApp < Sinatra::Base
   end
 
   get '/run/:run_id' do
-    @run = @user.run(params[:run_id])
-    body haml :run
+    @r = @user.run(params[:run_id])
+    haml :run
   end
   get '/weather/:run_id' do
-    @run = @user.run(params[:run_id])
+    @r = @user.run(params[:run_id])
     @weather = @run.conditions
-    body haml :run
+    haml :run
   end
   get '/runkeeper' do
     if params[:code]
@@ -59,22 +60,37 @@ class MyApp < Sinatra::Base
     end
     haml :runkeeper
   end
+  post '/wunderground' do
+    # puts params[:limit].inspect
+    if w = @user.wunder
+      w.update_attributes(params)
+    else
+      @user.create_wunder(params)
+    end
+    redirect '/welcome'
+  end
+  post '/account' do
+    @user.add_account(params)
+    redirect '/welcome'
+  end
+  get '/welcome' do
+    # only after first sign up or intentionally going back to this page. like setup
+    haml :welcome
+  end
   post '/signup' do
-    # allow sign up on main page? would make more sense
-    # user sign up. only need garmin username
-    # allow for
-      # wunderground api key addition
-      # pws
-      # pws_bad
-      # units (mi/km)
-      # custom data (weather)
+    @user = User.find_or_create_by(email: params[:email])
+    puts @user.inspect
+    cookies[:id] = nil
+    session[:id] = @user._id
+    puts session[:id]
+    redirect '/welcome'
   end
   post '/login' do
     # if successful
     cookies[:id] = nil
     session.clear
-    @user = User.find_by(name: params[:username])
-    cookies[:id] = @user._id
+    @user = User.find_by(email: params[:email])
+    params[:remember] ? cookies[:id] = @user._id : session[:id] = @user._id
     redirect '/'
     # 'something'.to_s
   end
