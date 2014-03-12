@@ -167,7 +167,7 @@ class Run
   end
 
   def duration
-    format = self.dur_secs >= 3600 ? "%H:%M:%S" : "%M:%S"
+    format = self.dur_secs >= 3600 ? "%l:%M:%S" : "%M:%S"
     Time.at(self.dur_secs).strftime(format)
   end
   def pace

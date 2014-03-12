@@ -2,8 +2,6 @@ class MyApp < Sinatra::Base
   before do
     @js = []
     @css = []
-  end
-  before do
     id = session[:id] || cookies[:id]
     # puts id
     if id && @user = User.find(id)
