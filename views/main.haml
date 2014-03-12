@@ -1,4 +1,4 @@
-- act_ids = @act_ids || @user.activity_ids(@run_count || 20, 1)
+- @act_ids ||= @user.activity_ids(@run_count || 20, 1)
 - user_runs = Hash[@user.runs.map{ |r| [r.run_id, r] }]
 / %a{href: '/retrieve' } Retrieve last run
 %table.runs
@@ -17,7 +17,7 @@
     - @user.custom.each do |c|
       %td= c
   %tbody
-    - act_ids.each do |run_id|
+    - @act_ids.each do |run_id|
       %tr.run{id: run_id}
         - if @r = user_runs[run_id.to_s]
           = haml :run_tr

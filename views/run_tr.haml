@@ -6,7 +6,7 @@
 %td= @r.pace
 %td= @r.avg_hr
 %td= @r.duration
-- if @r.condition.pws.empty?
+- if @r.condition.exist?
   %td{colspan: 4 + @user.custom.length}
     %a.get{href: "/weather/#{@r.run_id}"} Get weather data
 - else

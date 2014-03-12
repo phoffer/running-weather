@@ -1,3 +1,11 @@
+# require 'active_support/core_ext/class/subclasses' # to get subclasses of Account -> Garmin, Runkeeper, etc.
+# define method for each subclass of what string they represent
+# have Account search for whichever subclass responds to a string
+# replace case statement in User#add_account with Account.for('type', **args)
+# pattern referenced by Sandi Metz @ RoA 2014
+# or just have it look up class that matches (by name) the string. string.capitalize || camelize
+
+
 class Account # subclassed by account for each supported service
   include Mongoid::Document
   include Mongoid::Timestamps::Created
@@ -195,6 +203,10 @@ class Condition
   field :temp_max,      type: Float
   field :hum,           type: Float
   field :custom,        type: Hash,   default: {}
+
+  def exist?
+    !self.pws.empty?
+  end
 
   def summary
     self.update_attributes(self.run.conditions_hash) if self.pws.empty?
