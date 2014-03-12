@@ -17,7 +17,7 @@ class MyApp < Sinatra::Base
     @title = 'Running Weather'
     if @user
       @act_ids = @user.activity_ids(@run_count || 20, 1)
-      @act_ids.first(@user.wunderground.limit).take_while{ |run_id| !(@user.runs.find_by(run_id: run_id.to_s)) }.each{ |run_id| @user.run(run_id).conditions }
+      @act_ids.first(3).reverse.each{ |run_id| @user.run(run_id).conditions }
       # js 'ZeroClipboard.min'
       haml :main
     else
