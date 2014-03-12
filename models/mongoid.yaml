@@ -3,8 +3,8 @@ production:
   sessions:
     default:
       uri: <%= ENV['MONGOLAB_URI'] %>
-    options:
-      raise_not_found_error: false
+  options:
+    raise_not_found_error: false
 development:
   sessions:
     default:
