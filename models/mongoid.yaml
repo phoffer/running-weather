@@ -8,13 +8,12 @@ development:
     default:
       uri: <%= ENV['MONGOLAB_URI'] %>
   options:
-    allow_dynamic_fields: false
-    identity_map_enabled: false
+    # allow_dynamic_fields: false
+    # identity_map_enabled: false
     include_root_in_json: false
     include_type_for_serialization: false
     raise_not_found_error: false
-    skip_version_check: false
+    # skip_version_check: false
     scope_overwrite_exception: true
     use_activesupport_time_zone: false
     use_utc: false
-    raise_not_found_error: false
