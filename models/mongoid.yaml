@@ -17,3 +17,4 @@ development:
     scope_overwrite_exception: true
     use_activesupport_time_zone: false
     use_utc: false
+    raise_not_found_error: false
