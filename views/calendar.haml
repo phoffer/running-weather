@@ -1,0 +1,25 @@
+%table
+  %thead
+    %tr
+      - @calendar.day_names.each do |name|
+        %th= name
+      %th distance
+  %tbody
+    - @calendar.weeks.each_with_index do |week, i|
+      %tr
+        - week.map do |day|
+          - date = Date.parse("#{day.month}-#{day.number}")
+          %td{class: ('today' if day.today?)}
+            = date.to_s
+            - if @days[date]
+              = @days[date].inject(0.0) do |n, run|
+                %br
+                = run.run_id
+                - n + run.distance
+            - else
+              - 0
+        %td
+          = @week_miles[i]
+%br
+= @month_miles
+

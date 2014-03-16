@@ -17,3 +17,4 @@ gem 'haml'
 gem "mongoid", "~> 4.0.0.beta1"
 gem 'garmin_connect'
 gem 'haversine'
+gem 'cal', github: 'austinthecoder/cal'

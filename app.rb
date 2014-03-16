@@ -4,6 +4,8 @@ require 'sinatra/namespace'
 require "sinatra/cookies"
 require 'haml'
 require 'json'
+require 'cal'
+require 'date'
 
 class MyApp < Sinatra::Base
 	register Sinatra::Namespace

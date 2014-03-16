@@ -53,7 +53,7 @@ class User
     self.accounts.desc(:created_at).first
   end
   def target
-    self.current.user
+    self.current
   end
 
   def import(limit = 100, start = 1)
@@ -106,6 +106,21 @@ class Garmin < Account
   end
   def activity(run_id)
     GarminConnect::Activity.new(run_id)
+  end
+  def activity_list(*args)
+    self.user.activity_list(*args).select{ |json| json['activityType']['typeKey']['running'] }
+  end
+  def activity_ids(*args)
+    self.activity_list(*args).map{ |hash| hash['activityId'] }
+  end
+
+  def activities(*args)
+    self.activity_list(*args).map { |a| self.activity(a['activityId']) }
+  end
+  def method_missing(method, *args)
+    if self.user.respond_to? method
+      self.user.send(method, *args)
+    end
   end
   alias :run :activity
 
@@ -165,7 +180,12 @@ class Run
   def service
     self.account.class
   end
-
+  def date
+    self.time.to_date
+  end
+  def date_str
+    self.date.to_s
+  end
   def duration
     format = self.dur_secs >= 3600 ? "%l:%M:%S" : "%M:%S"
     Time.at(self.dur_secs).strftime(format)

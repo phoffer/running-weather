@@ -23,12 +23,26 @@ class MyApp < Sinatra::Base
       haml :index
     end
   end
+  get '/calendar' do
+    @first = Date.parse("#{params[:year] || Time.now.year}-#{params[:month] || Time.now.month}-01")
+    @calendar = Cal.new_monthly_calendar @first.year, @first.month
+    @runs = @user.runs.where(:time.gt => @calendar.first_day.date, :time.lt => @calendar.last_day.date.end_of_day)
+    @month_miles = @runs.select!{ |run| (@first..@first.end_of_month.end_of_day).cover?(run.date) }.inject(0) {|n,run| n + run.distance }
+    @days = @runs.group_by(&:date)
+    @week_miles = @runs.group_by{|r| (r.date+1).cweek }.map { |_, runs| runs.map(&:distance).inject(:+).round(2) }
+    # @week_miles = @calendar.weeks.inject(0) { |m, week| week.days.inject(0) {|n, day|  } }
+    haml :calendar
+  end
   get '/retrieve' do
     @r = @user.run(params[:run])
     haml :run
   end
   get '/runs' do
     # list all the runs
+    haml :main
+  end
+  get '/runs/all' do
+    @act_ids = @user.activity_ids(1000)
     haml :main
   end
   post '/run' do

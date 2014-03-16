@@ -1,4 +1,8 @@
 class GarminConnect::Activity
+  def running?
+    puts self.activityId
+    self.activityType.key['running']
+  end
   def conditions(wunderground: nil, stats: [:temp, :hum])
     local_pws = wunderground.nearby_pws(self.latlong)
     metrics = self.metrics
