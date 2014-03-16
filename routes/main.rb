@@ -25,11 +25,11 @@ class MyApp < Sinatra::Base
   end
   get '/calendar' do
     @first = Date.parse("#{params[:year] || Time.now.year}-#{params[:month] || Time.now.month}-01")
-    @calendar = Cal.new_monthly_calendar @first.year, @first.month
+    @calendar = Cal.new_monthly_calendar(@first.year, @first.month, start_week_on: Cal::MonthlyCalendar::DAY_NAMES[@user.start_week_on])
     @runs = @user.runs.where(:time.gt => @calendar.first_day.date, :time.lt => @calendar.last_day.date.end_of_day)
-    @month_miles = @runs.select!{ |run| (@first..@first.end_of_month.end_of_day).cover?(run.date) }.inject(0) {|n,run| n + run.distance }
+    @month_miles = @runs.select!{ |run| (@first.to_time..@first.end_of_month.end_of_day).cover?(run.time) }.inject(0) {|n,run| n + run.distance }
     @days = @runs.group_by(&:date)
-    @week_miles = @runs.group_by{|r| (r.date+1).cweek }.map { |_, runs| runs.map(&:distance).inject(:+).round(2) }
+    @week_miles = @runs.group_by{|r| (r.date+@user.day_offset).cweek }.map { |_, runs| runs.map(&:distance).inject(:+).round(2) }
     # @week_miles = @calendar.weeks.inject(0) { |m, week| week.days.inject(0) {|n, day|  } }
     haml :calendar
   end

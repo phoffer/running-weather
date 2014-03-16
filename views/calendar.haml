@@ -1,4 +1,4 @@
-%table
+%table.month
   %thead
     %tr
       - @calendar.day_names.each do |name|
@@ -10,12 +10,14 @@
         - week.map do |day|
           - date = Date.parse("#{day.month}-#{day.number}")
           %td{class: ('today' if day.today?)}
-            = date.to_s
+            = day.number
             - if @days[date]
-              = @days[date].inject(0.0) do |n, run|
+              - d_m = @days[date].inject(0.0) do |n, run|
                 %br
-                = run.run_id
+                = run.display
                 - n + run.distance
+              %br
+              = "Day total: #{d_m.round(2)}"
             - else
               - 0
         %td

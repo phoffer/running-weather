@@ -25,7 +25,12 @@ class User
   field :pws,           type: String,   default: nil
   field :pws_bad,       type: Array,    default: [],    as: :pws_blacklist
   field :unit,          type: String,   default: 'mi'
+  field :start_week_on, type: Integer,  default: 0
   field :custom,        type: Array,    default: []
+
+  def day_offset
+    1 - self.start_week_on
+  end
 
   # separate into user object and account object, 1-n. then grabbing data is based on account
   # account contains all information required for account handling
@@ -169,6 +174,10 @@ class Run
   end
   after_save do |run|
     run.user.touch
+  end
+  def display
+    str = "#{self.distance} @ #{self.pace} - #{self.avg_hr}"
+    self.condition.exist? ? str << " - #{condition.temp}" : str
   end
   def copy_service
     # puts self.user.current.inspect
