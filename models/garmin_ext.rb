@@ -40,7 +40,8 @@ class GarminConnect::Activity
   def summary(arr_of_symbols: %i{})
     {
       run_id:         self.activityId,
-      time:           self.time,
+      time_utc:       self.time.utc,
+      time_zone:      self.time.zone,
       timestamp:      self.activitySummary.BeginTimestamp.display,
       distance:       self.distance,
       pace_secs:      self.pace_secs,

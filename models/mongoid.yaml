@@ -18,5 +18,5 @@ development:
     raise_not_found_error: false
     # skip_version_check: false
     scope_overwrite_exception: true
-    use_activesupport_time_zone: false
-    use_utc: false
+    # use_activesupport_time_zone: false
+    # use_utc: false

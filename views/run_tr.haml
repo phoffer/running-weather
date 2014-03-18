@@ -2,6 +2,8 @@
   %a{href: "/run/#{@r.run_id}"}= @r.run_id
 %td= @r.timestamp.split(', ').first
 %td= @r.timestamp.split(', ').last
+%td= @r.target.time.zone
+%td= @r.time.inspect
 %td= @r.distance
 %td= @r.pace
 %td= @r.avg_hr

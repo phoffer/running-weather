@@ -160,7 +160,8 @@ class Run
   embeds_one :condition, autobuild: true
 
   field :run_id,        type: String,     as: :activity_id
-  field :time,          type: Time
+  field :time_utc,      type: Time
+  field :time_zone,     type: String
   field :timestamp,     type: String
   field :distance,      type: Float
   field :pace_secs,     type: Integer
@@ -178,6 +179,9 @@ class Run
   def display
     str = "#{self.distance} @ #{self.pace} - #{self.avg_hr}"
     self.condition.exist? ? str << " - #{condition.temp}" : str
+  end
+  def time
+    ActiveSupport::TimeWithZone.new(self.time_utc, ActiveSupport::TimeZone.new(self.time_zone))
   end
   def copy_service
     # puts self.user.current.inspect
