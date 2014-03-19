@@ -160,13 +160,13 @@ class Run
   embeds_one :condition, autobuild: true
 
   field :run_id,        type: String,     as: :activity_id
-  field :time_utc,      type: Time
-  field :time_zone,     type: String
-  field :timestamp,     type: String
-  field :distance,      type: Float
-  field :pace_secs,     type: Integer
+  field :time_utc,      type: Time,       default: -> { Time.now }
+  field :time_zone,     type: String,     default: 'UTC'
+  field :timestamp,     type: String,     default: ''
+  field :distance,      type: Float,      default: 0.0
+  field :pace_secs,     type: Integer,    default: 0
   field :avg_hr,        type: Integer,    default: nil
-  field :dur_secs,      type: Integer
+  field :dur_secs,      type: Integer,    default: 0
 
   # add query for between(a,b) -> { a.to_timezone..b.to_timezone } # where do we get timezone from?
             # maybe just #all.select{} ?
@@ -184,6 +184,8 @@ class Run
   end
   def time
     ActiveSupport::TimeWithZone.new(self.time_utc.utc, ActiveSupport::TimeZone.new(self.time_zone))
+  rescue
+    puts self.run_id
   end
   def copy_service
     # puts self.user.current.inspect
@@ -191,6 +193,8 @@ class Run
   end
   def retrieve_data
     self.update_attributes(self.summary)
+  rescue
+    self.summary
   end
   def service
     self.account.class
@@ -215,6 +219,7 @@ class Run
     self.target.conditions(wunderground: self.user.wunderground, stats: [:temp, :hum] + self.user.custom)
   end
   def conditions
+    return if self.dur_secs == 0
     self.condition.summary
   end
   def add_condition

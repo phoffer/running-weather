@@ -3,7 +3,10 @@
 %td= @r.timestamp.split(', ').first
 / # %td= @r.time_utc.utc
 / %td= @r.target.time.zone
-%td= @r.time
+- begin
+  %td= @r.time
+- rescue
+  - puts @r.id
 / # %td= ActiveSupport::TimeWithZone.new(@r.time_utc.utc, ActiveSupport::TimeZone.new(@r.time_zone))
 %td= @r.distance
 %td= @r.pace

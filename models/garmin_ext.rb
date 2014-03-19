@@ -41,7 +41,7 @@ class GarminConnect::Activity
     {
       run_id:         self.activityId,
       time_utc:       self.time.utc,
-      time_zone:      self.time.zone,
+      time_zone:      self.activitySummary.BeginTimestamp.uom,
       timestamp:      self.activitySummary.BeginTimestamp.display,
       distance:       self.distance,
       pace_secs:      self.pace_secs,
