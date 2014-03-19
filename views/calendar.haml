@@ -12,7 +12,7 @@
           %td{class: ('today' if day.today?)}
             = day.number
             - if @days[date]
-              - d_m = @days[date].inject(0.0) do |n, run|
+              - d_m = @days[date].sort_by(&:time).inject(0.0) do |n, run|
                 %br
                 %a{href: "/run/#{run.run_id}" }= run.display + (run.condition.exist? ? "&deg;" : '' )
                 - n + run.distance
