@@ -194,6 +194,7 @@ class Run
   def retrieve_data
     self.update_attributes(self.summary)
   rescue
+    self.update_attributes(time_utc: self.target.time)
     self.summary
   end
   def service
