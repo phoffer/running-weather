@@ -14,7 +14,7 @@
             - if @days[date]
               - d_m = @days[date].inject(0.0) do |n, run|
                 %br
-                = run.display
+                %a{href: "/run/#{run.run_id}" }= run.display + (run.condition.exist? ? "&deg;" : '' )
                 - n + run.distance
               %br
               = "Day total: #{d_m.round(2)}"

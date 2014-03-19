@@ -168,6 +168,8 @@ class Run
   field :avg_hr,        type: Integer,    default: nil
   field :dur_secs,      type: Integer
 
+  # add query for between(a,b) -> { a.to_timezone..b.to_timezone } # where do we get timezone from?
+            # maybe just #all.select{} ?
 
   before_create :copy_service
   after_create  do |run|
@@ -181,7 +183,7 @@ class Run
     self.condition.exist? ? str << " - #{condition.temp}" : str
   end
   def time
-    ActiveSupport::TimeWithZone.new(self.time_utc, ActiveSupport::TimeZone.new(self.time_zone))
+    ActiveSupport::TimeWithZone.new(self.time_utc.utc, ActiveSupport::TimeZone.new(self.time_zone))
   end
   def copy_service
     # puts self.user.current.inspect

@@ -1,9 +1,10 @@
 %td
   %a{href: "/run/#{@r.run_id}"}= @r.run_id
 %td= @r.timestamp.split(', ').first
-%td= @r.timestamp.split(', ').last
-%td= @r.target.time.zone
-%td= @r.time.inspect
+/ # %td= @r.time_utc.utc
+/ %td= @r.target.time.zone
+%td= @r.time
+/ # %td= ActiveSupport::TimeWithZone.new(@r.time_utc.utc, ActiveSupport::TimeZone.new(@r.time_zone))
 %td= @r.distance
 %td= @r.pace
 %td= @r.avg_hr
