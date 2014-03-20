@@ -1,0 +1,42 @@
+%a{href: '/' } Main page
+%br
+%a{href: 'http://www.wunderground.com/weather/api/' } Wunderground API link
+- k,l = @user.wunder ? [@user.wunder.key, @user.wunder.limit] : [nil, nil]
+%form{method: :post, action: '/wunderground'}
+  %input{ type: :text, name: :key, placeholder: 'API key', value: k }
+  %input{ type: :text, name: :limit, placeholder: 'API limit (per minute)', value: l }
+  %button{ type: :submit }= @user.wunder ? 'Update API Key' : 'Add API key'
+
+
+.garmin
+  %form{method: :post, action: '/account'}
+    %input{ type: :hidden, name: :service,  value: 'garmin' }
+    %input{ type: :text,   name: :name }
+    %button{ type: :submit} Add Garmin Account
+
+%table.runs
+  %thead
+    %td Run ID
+    %td Day
+    %td Time
+    %td distance
+    %td dur_secs
+  %tbody
+    - @runs.each do |r|
+      %tr.run{id: r._id}
+        - @r = r
+        %td
+          %a{href: "/id/#{@r._id}"}= @r.run_id
+        %td= @r.timestamp.split(', ').first
+        / # %td= @r.time_utc.utc
+        / %td= @r.target.time.zone
+        - begin
+          %td= @r.time
+        - rescue
+          - puts @r.id
+        / # %td= ActiveSupport::TimeWithZone.new(@r.time_utc.utc, ActiveSupport::TimeZone.new(@r.time_zone))
+        %td= @r.distance
+        %td= @r.duration
+
+- @content = @user
+=haml :_inspect

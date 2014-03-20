@@ -37,6 +37,14 @@ class MyApp < Sinatra::Base
     @r = @user.run(params[:run])
     haml :run
   end
+  get '/settings' do
+
+    haml :settings
+  end
+  get '/id/:id' do |id|
+    @r = @user.runs.find(id)
+    haml :run
+  end
   get '/runs' do
     # list all the runs
     haml :main
