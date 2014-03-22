@@ -1,27 +1,30 @@
-%table.month
+%table.calendar#month
   %thead
     %tr
       - @calendar.day_names.each do |name|
         %th= name
-      %th distance
+      %th total
   %tbody
     - @calendar.weeks.each_with_index do |week, i|
       %tr
         - week.map do |day|
           - date = Date.parse("#{day.month}-#{day.number}")
           %td{class: ('today' if day.today?)}
-            = day.number
+            .day= day.number
             - if @days[date]
-              - d_m = @days[date].sort_by(&:time).inject(0.0) do |n, run|
-                %br
-                %a{href: "/run/#{run.run_id}" }= run.display + (run.condition.exist? ? "&deg;" : '' )
-                - n + run.distance
-              %br
-              = "Day total: #{d_m.round(2)}"
+              .runs
+                - d_m = @days[date].sort_by(&:time).inject(0.0) do |n, run|
+                  %br
+                  %a.run{href: "/run/#{run.run_id}" }= run.display + (run.condition.exist? ? "&deg;" : '' )
+                  - n + run.distance
+              .total= d_m.round(2).to_s  + ' miles'
             - else
               - 0
         %td
-          = @week_miles[i]
+          -if @week_miles[i]
+            = @week_miles[i]
+            %br
+            miles
 %br
 = @month_miles.round(2)
 

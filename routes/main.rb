@@ -11,6 +11,10 @@ class MyApp < Sinatra::Base
     end
     # puts @user.username
   end
+  get '/css/*.css' do
+    # scss(request.path[0..-5].gsub('css/', 'sass/').to_sym)
+    scss params[:splat].first.to_sym, views: settings.views + '/sass'
+  end
   get '/' do
     @title = 'Running Weather'
     if @user

@@ -15,7 +15,7 @@ class MyApp < Sinatra::Base
   # disable :logging
   set :haml, format: :html5
   set :javascripts, ['jquery-2.1.0.min', 'main']
-  set :stylesheets, []
+  set :stylesheets, ['main']
 
   configure :production do
     # require 'newrelic_rpm'
